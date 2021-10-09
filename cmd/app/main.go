@@ -4,18 +4,21 @@ import (
 	"bookshelf/config"
 	"bookshelf/server/router"
 	"fmt"
-	"log"
 	"net/http"
+
+	lr "bookshelf/util/logger"
 )
 
 func main() {
 	appConf := config.AppConfig()
 
+	logger := lr.New(appConf.Debug)
+
 	appRouter := router.New()
 
 	address := fmt.Sprintf(":%d", appConf.Server.Port)
 
-	log.Printf("Starting server at %s\n", address)
+	logger.Info().Msgf("Starting Server %v", address)
 
 	s := &http.Server{
 		Addr:         address,
@@ -26,6 +29,6 @@ func main() {
 	}
 
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		log.Fatal("Server startup failed...")
+		logger.Fatal().Err(err).Msg("Server Startup Failed...")
 	}
 }

@@ -10,6 +10,7 @@ import (
 // A Conf struct wuth embedded serverConf to get the
 // initial server configs.
 type Conf struct {
+	Debug  bool `env:"DEBUG,required"`
 	Server serverConf
 }
 
