@@ -1,24 +1,28 @@
 package main
 
 import (
+	"bookshelf/config"
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 )
 
 func main() {
+	appConf := config.AppConfig()
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", greet)
 
-	log.Println("Starting server at :8000")
+	address := fmt.Sprintf(":%d", appConf.Server.Port)
+
+	log.Printf("Starting server at %s\n", address)
 
 	s := &http.Server{
-		Addr:         ":8000",
+		Addr:         address,
 		Handler:      mux,
-		ReadTimeout:  30 * time.Second,
-		WriteTimeout: 30 * time.Second,
-		IdleTimeout:  120 * time.Second,
+		ReadTimeout:  appConf.Server.TimeoutRead,
+		WriteTimeout: appConf.Server.TimeoutWrite,
+		IdleTimeout:  appConf.Server.TimeoutIdle,
 	}
 
 	if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
