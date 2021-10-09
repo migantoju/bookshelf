@@ -2,14 +2,17 @@ package router
 
 import (
 	"bookshelf/server/app"
+	"bookshelf/server/requestlog"
 
 	"github.com/go-chi/chi"
 )
 
-func New() *chi.Mux {
+func New(a *app.App) *chi.Mux {
+	l := a.Logger()
+
 	r := chi.NewRouter()
 
-	r.MethodFunc("GET", "/", app.HandleIndex)
+	r.Method("GET", "/", requestlog.NewHandler(a.HandleIndex, l))
 
 	return r
 }

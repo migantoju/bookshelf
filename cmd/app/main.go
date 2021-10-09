@@ -2,6 +2,7 @@ package main
 
 import (
 	"bookshelf/config"
+	"bookshelf/server/app"
 	"bookshelf/server/router"
 	"fmt"
 	"net/http"
@@ -14,7 +15,9 @@ func main() {
 
 	logger := lr.New(appConf.Debug)
 
-	appRouter := router.New()
+	application := app.New(logger)
+
+	appRouter := router.New(application)
 
 	address := fmt.Sprintf(":%d", appConf.Server.Port)
 
