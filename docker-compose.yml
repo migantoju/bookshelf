@@ -8,3 +8,16 @@ services:
       - ./docker/app/.env
     ports:
       - "8000:8000"
+    depends_on:
+      - db
+  
+  db:
+    build: ./docker/mariadb/
+    environment:
+      MYSQL_ROOT_PASSWORD: some_strong_password
+      MYSQL_DATABASE: bookshelf
+      MYSQL_USER: toledano
+      MYSQL_PASSWORD: some_strong_password
+    ports:
+      - 3306:3306
+    restart: always
