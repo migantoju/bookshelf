@@ -11,7 +11,8 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -ldflags '-w -s' -a -o ./bin/app ./cmd/app
+RUN go build -ldflags '-w -s' -a -o ./bin/app ./cmd/app \
+    && go build -ldflags '-w -s' -a -o ./bin/migrate ./cmd/migrate
 
 # Deployment environment
 # ----------------------
@@ -20,6 +21,8 @@ FROM alpine
 RUN apk update && apk add --no-cache bash
 
 COPY --from=builder /myapp/bin/app /myapp/
+COPY --from=builder /myapp/bin/migrate /myapp/
+COPY --from=builder /myapp/migrations /myapp/migrations
 
 EXPOSE 8000
 
